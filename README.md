@@ -1,29 +1,25 @@
 # FORGE
 
-Independent software market. House brand: **Bid Check Pro**.
+A store for AI builds.
 
-Paste a bid. We mark the padding — TBD permits, loaded labor, fat dumpsters, vague allowances. First check is free. Keep the desk at $79/mo or $849/yr. Live Stripe. Statement **BID CHECK PRO**. Real cards. 4242 declines.
+The game is: you build it, you don’t know anyone, you wake up rich. That’s the lie. You can’t sell it alone.
 
-## Bid Check Pro
+This wall is builders listing builds and selling them. Same shelf. Newest listing takes the front row. No paid rank. Live Stripe. Real cards. 4242 declines.
 
-| Plan | Price | Pay |
-| --- | --- | --- |
-| Monthly | $79 | [Buy](https://buy.stripe.com/6oU6oIdkzeRUh1R9sAcMM0q) |
-| Yearly | $849 | [Buy](https://buy.stripe.com/5kQ00keoD9xA6nddIQcMM0s) |
+## On the wall
 
-Also on the shelf: PitchForge $9, Auditor $27, Refactorer $27, Master Bundle $67.
+| Build | Aisle | Price | Pay |
+| --- | --- | --- | --- |
+| PitchForge | tool | $9 | [Buy](https://buy.stripe.com/5kQfZi3JZdNQ6nd9sAcMM0x) |
+| Saylor stack Auditor | tool | $27 | [Buy](https://buy.stripe.com/28E28sfsH114dPFawEcMM0u) |
+| Saylor stack Refactorer | tool | $27 | [Buy](https://buy.stripe.com/9B69AU0xN9xAeTJawEcMM0w) |
+| Master Bundle Pass | kit | $67 | [Buy](https://buy.stripe.com/4gMfZicgvbFI9zp208cMM0v) |
 
-## Why this stands a chance
+## How it works
 
-Not because AI is billions of people. Because a GC with a $68k kitchen bid will pay $79 to catch padding before they sign. Recurring. That is the wealth path.
+1. Browse the public shelf. Search, sort, open a product page.
+2. Sign in. Buy now opens live Stripe.
+3. License key mints on a paid order.
+4. List yours. Front row is yours. Optional Connect `acct_` — FORGE keeps 10%.
 
-## Post this
-
-Bid Check Pro is live.
-
-Paste the sub’s number before you sign. We mark the padding.
-
-First check free. $79/mo.
-Statement BID CHECK PRO.
-
-https://github.com/fredsaylor459-cmd/forge-independent-store
+Crypto tape is live prices. Card takes the money.
