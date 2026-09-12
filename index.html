@@ -4,29 +4,196 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>FORGE — store for AI builds</title>
-  <meta name="description" content="You built it. Nobody knows you. The dream is the game. This wall is builders selling builds. Live Stripe." />
+  <meta name="description" content="Public shelf for independent builds. Newest listing takes the front row. No paid rank. Live Stripe." />
   <style>
-    :root { color-scheme: dark; }
-    body { margin:0; font-family: ui-sans-serif, system-ui, sans-serif; background:#090807; color:#f4efe6; }
-    main { max-width: 720px; margin: 0 auto; padding: 48px 20px 80px; }
-    h1 { font-size: 42px; margin: 12px 0 0; line-height: 1.05; }
-    em { color:#c45c26; font-style:normal; }
-    p { color:#9a9083; line-height:1.6; }
-    .live { color:#7dcea0; font: 12px ui-monospace, monospace; letter-spacing:.16em; text-transform:uppercase; }
-    a.card { display:flex; justify-content:space-between; gap:16px; border:1px solid #2c281f; border-radius:12px; padding:16px 18px; color:inherit; text-decoration:none; margin-top:10px; }
-    a.card:hover { border-color:#c45c26; }
-    b { font-family: ui-monospace, monospace; color:#7dcea0; }
+    :root {
+      color-scheme: dark;
+      --bg: #090807;
+      --fg: #f4efe6;
+      --muted: #9a9083;
+      --subtle: #6f675c;
+      --line: #2c281f;
+      --accent: #c45c26;
+      --ok: #7dcea0;
+      --panel: #141210;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: var(--bg); color: var(--fg); }
+    a { color: inherit; }
+    .ticker { overflow: hidden; background: var(--accent); color: #1a0e08; font: 12px ui-monospace, monospace; letter-spacing: .04em; }
+    .ticker-track { display: inline-block; white-space: nowrap; padding: 10px 0; animation: forge-scroll 28s linear infinite; }
+    @keyframes forge-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    header { position: sticky; top: 0; z-index: 20; border-bottom: 1px solid var(--line); background: rgba(9,8,7,.84); backdrop-filter: blur(10px); }
+    nav, main { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+    nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .mark { width: 32px; height: 32px; display: grid; place-items: center; background: var(--accent); color: #1a0e08; font-weight: 700; }
+    .brand b { font-size: 28px; letter-spacing: -.03em; }
+    .kicker { font: 11px ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--ok); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 0 16px; border-radius: 8px; border: 1px solid var(--line); text-decoration: none; font-size: 14px; }
+    .btn-primary { background: var(--accent); border-color: var(--accent); color: #1a0e08; font-weight: 650; }
+    .btn-ghost { background: transparent; }
+    .hero { display: grid; gap: 28px; padding: 48px 0 28px; }
+    @media (min-width: 840px) { .hero { grid-template-columns: 1.2fr .8fr; align-items: end; } }
+    h1 { font-size: clamp(40px, 7vw, 72px); line-height: .95; margin: 12px 0 0; letter-spacing: -.04em; }
+    h1 em { color: var(--accent); font-style: italic; }
+    .lede { color: var(--muted); line-height: 1.6; max-width: 42rem; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; border-top: 1px solid var(--line); padding-top: 18px; margin-top: 28px; }
+    .stats b { display: block; font-size: 22px; font-family: ui-monospace, monospace; }
+    .stats span { color: var(--muted); font-size: 12px; }
+    .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+    .panel h2 { margin: 0 0 4px; font-size: 22px; }
+    .panel p { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+    .panel li { display: flex; justify-content: space-between; padding: 12px 0; border-top: 1px solid var(--line); font-size: 14px; }
+    .panel li:first-of-type { border-top: 0; }
+    .mono { font-family: ui-monospace, monospace; color: var(--ok); }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 20px; }
+    .filters button { min-height: 40px; padding: 0 14px; border-radius: 8px; border: 0; background: #161412; color: var(--fg); text-transform: capitalize; cursor: pointer; }
+    .filters button.on { background: var(--accent); color: #1a0e08; }
+    .grid { display: grid; gap: 14px; padding-bottom: 72px; }
+    @media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 960px) { .grid { grid-template-columns: 1fr 1fr 1fr; } }
+    article { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--panel); display: flex; flex-direction: column; }
+    article:hover { border-color: var(--accent); }
+    .cover { height: 132px; background: #100e0c; }
+    .body { padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .body h3 { margin: 0; font-size: 20px; letter-spacing: -.02em; }
+    .body p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; flex: 1; }
+    .row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+    .price { font-family: ui-monospace, monospace; color: var(--ok); }
+    .btc { font-family: ui-monospace, monospace; color: var(--subtle); font-size: 12px; }
+    footer { border-top: 1px solid var(--line); padding: 28px 20px 48px; color: var(--subtle); font-size: 13px; }
+    footer div { max-width: 1080px; margin: 0 auto; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
   </style>
 </head>
 <body>
+  <div class="ticker"><div class="ticker-track" id="tape">FORGE · public shelf · newest takes the front · no paid rank · live Stripe · BTC · ETH · SOL · USDC    ·    FORGE · public shelf · newest takes the front · no paid rank · live Stripe · BTC · ETH · SOL · USDC    ·    </div></div>
+  <header>
+    <nav>
+      <a class="brand" href="/"><span class="mark">F</span><b>Forge</b></a>
+      <span class="kicker">Store for AI builds</span>
+      <a class="btn btn-ghost" href="https://spring-lotus-plaza-spruce.vercel.app/">Live market</a>
+    </nav>
+  </header>
   <main>
-    <p class="live">FORGE · Store for AI builds · Live Stripe</p>
-    <h1>You built it. <em>Nobody knows you.</em></h1>
-    <p>The dream says you wake up rich. That’s the game. You can’t sell it alone. This wall is builders listing builds and selling them. Same shelf. Newest takes the front. No paid rank.</p>
-    <a class="card" href="https://buy.stripe.com/5kQfZi3JZdNQ6nd9sAcMM0x"><span>PitchForge</span><b>$9</b></a>
-    <a class="card" href="https://buy.stripe.com/28E28sfsH114dPFawEcMM0u"><span>Saylor stack Auditor</span><b>$27</b></a>
-    <a class="card" href="https://buy.stripe.com/9B69AU0xN9xAeTJawEcMM0w"><span>Saylor stack Refactorer</span><b>$27</b></a>
-    <a class="card" href="https://buy.stripe.com/4gMfZicgvbFI9zp208cMM0v"><span>Master Bundle Pass</span><b>$67</b></a>
+    <section class="hero">
+      <div>
+        <p class="kicker">Independent software market</p>
+        <h1>You built it. <em>Nobody knows you.</em></h1>
+        <p class="lede">The dream says you wake up rich. That is the game. You cannot sell it alone. This wall is builders listing builds. Same shelf. Newest takes the front. No paid rank.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:22px">
+          <a class="btn btn-primary" href="#shelf">Browse builds</a>
+          <a class="btn btn-ghost" href="https://spring-lotus-plaza-spruce.vercel.app/#list">List yours</a>
+        </div>
+        <div class="stats">
+          <div><b id="count">10</b><span>In rotation</span></div>
+          <div><b>0% payola</b><span>No bought rank</span></div>
+          <div><b id="btc">—</b><span>BTC</span></div>
+        </div>
+      </div>
+      <aside class="panel">
+        <h2>Rails</h2>
+        <p>Live prices. Same shelf for everyone.</p>
+        <ul>
+          <li><span>Bitcoin</span><span class="mono" id="p-btc">live</span></li>
+          <li><span>Ethereum</span><span class="mono" id="p-eth">live</span></li>
+          <li><span>Solana</span><span class="mono" id="p-sol">live</span></li>
+          <li><span>Stripe Checkout</span><span class="mono">Live</span></li>
+        </ul>
+      </aside>
+    </section>
+    <section id="shelf">
+      <h2 style="font-size:36px;margin:8px 0 6px;letter-spacing:-.03em">Independent builds</h2>
+      <p class="lede">Newest listing sits at #1. Card checkout is live Stripe. Catalog checkout opens the first FORGE market.</p>
+      <div class="filters" id="filters"></div>
+      <div class="grid" id="grid"></div>
+    </section>
   </main>
+  <footer>
+    <div>
+      <span>FORGE keeps 10% on Connect. 4242 declines. Real cards take the money.</span>
+      <a href="https://spring-lotus-plaza-spruce.vercel.app/">Open the first live market →</a>
+    </div>
+  </footer>
+  <script>
+    const LIVE = "https://spring-lotus-plaza-spruce.vercel.app/";
+    const ITEMS = [
+      { title: "PitchForge", aisle: "tool", maker: "Saylor stack", usd: 9, blurb: "Turn a raw idea into a pitch you can sell tonight.", href: "https://buy.stripe.com/5kQfZi3JZdNQ6nd9sAcMM0x", kind: "stripe" },
+      { title: "Saylor stack Auditor", aisle: "tool", maker: "Saylor stack", usd: 27, blurb: "Audit the stack. Mark the rot before it ships.", href: "https://buy.stripe.com/28E28sfsH114dPFawEcMM0u", kind: "stripe" },
+      { title: "Saylor stack Refactorer", aisle: "tool", maker: "Saylor stack", usd: 27, blurb: "Refactor the working build without losing the plot.", href: "https://buy.stripe.com/9B69AU0xN9xAeTJawEcMM0w", kind: "stripe" },
+      { title: "Master Bundle Pass", aisle: "kit", maker: "Saylor stack", usd: 67, blurb: "Auditor + Refactorer + PitchForge in one pass.", href: "https://buy.stripe.com/4gMfZicgvbFI9zp208cMM0v", kind: "stripe" },
+      { title: "Night Drop theme", aisle: "drop", maker: "Night Drop", usd: 19, blurb: "Dark IDE and terminal theme pack.", href: LIVE, kind: "market" },
+      { title: "Forge Analytics", aisle: "tool", maker: "Forge Lab", usd: 99, blurb: "Desktop sales dashboard. CSV and wallet import.", href: LIVE, kind: "market" },
+      { title: "Contract Review hour", aisle: "service", maker: "Counsel Bench", usd: 180, blurb: "One hour review with a written report.", href: LIVE, kind: "market" },
+      { title: "Lattice Backup", aisle: "tool", maker: "Lattice", usd: 29, blurb: "Encrypted vault app. Lifetime seat.", href: LIVE, kind: "market" },
+      { title: "Anvil UI Kit", aisle: "kit", maker: "Anvil Studio", usd: 79, blurb: "Figma plus React kit. Commercial license.", href: LIVE, kind: "market" },
+      { title: "Forge CLI Pro", aisle: "tool", maker: "Forge Lab", usd: 49, blurb: "Local build runner and license key. macOS, Windows, Linux.", href: LIVE, kind: "market" }
+    ];
+    let filter = "all";
+    let btc = null;
+    const aisles = ["all", "tool", "kit", "drop", "service"];
+    function cover(title, aisle) {
+      let n = 0;
+      for (const c of title) n = (n * 31 + c.charCodeAt(0)) >>> 0;
+      const rot = (n % 18) - 9;
+      const x = 24 + (n % 48);
+      if (aisle === "kit") return `<rect x="${x}" y="24" width="96" height="96" fill="#1c1914" transform="rotate(${rot} 160 80)"/><rect x="${x+36}" y="40" width="96" height="96" fill="#c45c2640"/><rect x="${x+76}" y="56" width="72" height="72" fill="#f4efe61a"/>`;
+      if (aisle === "drop") return `<circle cx="160" cy="80" r="62" fill="#1c1914"/><circle cx="160" cy="80" r="42" fill="#c45c2633"/><circle cx="160" cy="80" r="16" fill="#c45c2680"/>`;
+      if (aisle === "service") return `<path d="M0 0 L220 0 L140 160 L0 160 Z" fill="#1c1914"/><path d="M80 0 L320 0 L320 160 L0 160 Z" fill="#c45c2626"/><rect x="40" y="56" width="240" height="5" fill="#c45c2666"/><rect x="40" y="78" width="160" height="5" fill="#f4efe626"/>`;
+      return `<rect x="${28+(n%12)}" y="28" width="16" height="104" fill="#c45c2673"/><rect x="64" y="44" width="16" height="88" fill="#f4efe61f"/><rect x="100" y="24" width="16" height="112" fill="#1c1914"/><rect x="160" y="36" width="128" height="88" fill="#c45c2626"/><rect x="188" y="52" width="16" height="72" fill="#c45c2659"/>`;
+    }
+    function render() {
+      document.getElementById("filters").innerHTML = aisles.map((c) =>
+        `<button type="button" data-aisle="${c}" class="${filter===c?"on":""}">${c}</button>`
+      ).join("");
+      const shown = ITEMS.filter((i) => filter === "all" || i.aisle === filter);
+      document.getElementById("count").textContent = ITEMS.length;
+      document.getElementById("grid").innerHTML = shown.map((item, i) => {
+        const btcBit = btc ? `<span class="btc">${(item.usd / btc).toFixed(6)} BTC</span>` : "";
+        const label = item.kind === "stripe" ? "Buy now" : "Open live checkout";
+        return `<article>
+          <div class="cover"><svg viewBox="0 0 320 160" width="100%" height="100%" aria-hidden="true">${cover(item.title, item.aisle)}</svg></div>
+          <div class="body">
+            <p class="kicker">#${i+1} · ${item.maker} · ${item.aisle}</p>
+            <h3>${item.title}</h3>
+            <p>${item.blurb}</p>
+            <div class="row"><span class="price">$${item.usd}</span>${btcBit}</div>
+            <a class="btn btn-primary" href="${item.href}">${label}</a>
+          </div>
+        </article>`;
+      }).join("");
+    }
+    document.getElementById("filters").addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-aisle]");
+      if (!btn) return;
+      filter = btn.dataset.aisle;
+      render();
+    });
+    async function prices() {
+      try {
+        const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,usd-coin&vs_currencies=usd&include_24hr_change=true");
+        if (!res.ok) throw new Error("gecko");
+        const d = await res.json();
+        btc = d.bitcoin.usd;
+        const fmt = (n, digits) => n.toLocaleString(undefined, { maximumFractionDigits: digits });
+        const row = (s, p, c, digits) => `${s} $${fmt(p, digits)} ${c>=0?"+":""}${c.toFixed(2)}%`;
+        const tape = [
+          row("BTC", d.bitcoin.usd, d.bitcoin.usd_24h_change, 0),
+          row("ETH", d.ethereum.usd, d.ethereum.usd_24h_change, 0),
+          row("SOL", d.solana.usd, d.solana.usd_24h_change, 2),
+          row("USDC", d["usd-coin"].usd, d["usd-coin"].usd_24h_change, 2),
+          "FORGE accepts live Stripe · BTC · ETH · SOL · USDC"
+        ].join("    ·    ");
+        document.getElementById("tape").textContent = `${tape}    ·    ${tape}    ·    ${tape}    ·    `;
+        document.getElementById("btc").textContent = "$" + Math.round(d.bitcoin.usd).toLocaleString();
+        document.getElementById("p-btc").textContent = "$" + Math.round(d.bitcoin.usd).toLocaleString();
+        document.getElementById("p-eth").textContent = "$" + Math.round(d.ethereum.usd).toLocaleString();
+        document.getElementById("p-sol").textContent = "$" + d.solana.usd.toFixed(2);
+        render();
+      } catch (_) { render(); }
+    }
+    render();
+    prices();
+  </script>
 </body>
 </html>
